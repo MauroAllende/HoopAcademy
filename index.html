@@ -1,0 +1,715 @@
+<title>Casos de Uso — Plataforma HoopAcademy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#f4f5f1;
+  --surface:#ffffff;
+  --surface-2:#eceee7;
+  --border:#dadcd3;
+  --ink:#161c22;
+  --ink-soft:#454e56;
+  --muted:#6c7570;
+  --accent:#c8500f;
+  --accent-ink:#ffffff;
+  --accent-soft:#f7e2d2;
+  --court:#1f3b5c;
+  --court-soft:#e3e9f0;
+  --good:#1f6b45;
+  --good-soft:#e2efe6;
+  --warn:#96530a;
+  --warn-soft:#f5e6d0;
+  --danger:#a3291f;
+  --danger-soft:#f6e0dd;
+  --font-display:'Oswald',system-ui,sans-serif;
+  --font-body:'Public Sans',system-ui,-apple-system,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,monospace;
+  --radius:10px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#10161c;
+    --surface:#161e26;
+    --surface-2:#1c2530;
+    --border:#2b3742;
+    --ink:#eef1f3;
+    --ink-soft:#c2ccd3;
+    --muted:#8b98a2;
+    --accent:#ef8a44;
+    --accent-ink:#1a1206;
+    --accent-soft:#3a2717;
+    --court:#8ab0dd;
+    --court-soft:#1f3049;
+    --good:#6fc79a;
+    --good-soft:#153327;
+    --warn:#e0a94f;
+    --warn-soft:#3a2c11;
+    --danger:#e2857c;
+    --danger-soft:#3a1e1b;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10161c;
+  --surface:#161e26;
+  --surface-2:#1c2530;
+  --border:#2b3742;
+  --ink:#eef1f3;
+  --ink-soft:#c2ccd3;
+  --muted:#8b98a2;
+  --accent:#ef8a44;
+  --accent-ink:#1a1206;
+  --accent-soft:#3a2717;
+  --court:#8ab0dd;
+  --court-soft:#1f3049;
+  --good:#6fc79a;
+  --good-soft:#153327;
+  --warn:#e0a94f;
+  --warn-soft:#3a2c11;
+  --danger:#e2857c;
+  --danger-soft:#3a1e1b;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.6;
+}
+h1,h2,h3,h4{
+  font-family:var(--font-display);
+  text-transform:uppercase;
+  letter-spacing:.02em;
+  text-wrap:balance;
+  color:var(--ink);
+  margin:0;
+}
+p{margin:0 0 .9em 0; max-width:70ch;}
+a{color:var(--court);}
+:root[data-theme="dark"] a, @media (prefers-color-scheme:dark){ a{color:var(--court);} }
+code, .mono{font-family:var(--font-mono);}
+::selection{background:var(--accent-soft);}
+a:focus-visible, summary:focus-visible, button:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+
+.topbar{
+  position:sticky; top:0; z-index:20;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:1rem;
+  padding:.7rem 1.5rem;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--border);
+  font-family:var(--font-display);
+  text-transform:uppercase;
+  font-size:.8rem;
+  letter-spacing:.06em;
+}
+.topbar span{color:var(--muted); font-family:var(--font-body); text-transform:none; letter-spacing:0; font-size:.85rem;}
+.topbar a{color:var(--ink); text-decoration:none; border-bottom:2px solid var(--accent); padding-bottom:1px;}
+
+.wrap{max-width:960px; margin:0 auto; padding:0 1.5rem;}
+
+header.hero{
+  padding:3.2rem 0 2.4rem;
+  border-bottom:1px solid var(--border);
+}
+.eyebrow{
+  display:inline-flex; align-items:center; gap:.5rem;
+  font-family:var(--font-display); font-size:.78rem; letter-spacing:.14em;
+  color:var(--accent); text-transform:uppercase; margin-bottom:1rem;
+}
+.eyebrow::before{content:""; width:1.6rem; height:2px; background:var(--accent); display:inline-block;}
+h1.title{font-size:clamp(2rem,4.4vw,3.1rem); line-height:1.05; max-width:18ch;}
+.subtitle{font-size:1.08rem; color:var(--ink-soft); max-width:56ch; margin-top:1rem;}
+.meta-row{display:flex; flex-wrap:wrap; gap:1.6rem; margin-top:1.6rem; font-size:.85rem; color:var(--muted);}
+.meta-row strong{color:var(--ink-soft); font-weight:600;}
+
+section{padding:2.6rem 0; border-bottom:1px solid var(--border);}
+section:last-of-type{border-bottom:none;}
+.section-head{display:flex; align-items:baseline; gap:.8rem; margin-bottom:.4rem;}
+.section-num{font-family:var(--font-mono); color:var(--accent); font-size:.95rem;}
+h2.section-title{font-size:clamp(1.35rem,2.6vw,1.7rem);}
+.section-intro{color:var(--ink-soft); margin-top:.7rem; max-width:66ch;}
+
+/* actors */
+.actor-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:.9rem; margin-top:1.6rem;}
+.actor-card{
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  padding:1rem 1.1rem;
+}
+.actor-card .kind{font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-family:var(--font-display);}
+.actor-card h3{font-size:1rem; text-transform:none; letter-spacing:0; margin:.3rem 0 .35rem; font-family:var(--font-body); font-weight:700;}
+.actor-card p{font-size:.87rem; color:var(--ink-soft); margin:0;}
+
+/* toc */
+.toc-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:0 2rem; margin-top:1.4rem;}
+.toc-group{padding:.9rem 0; border-top:1px solid var(--border);}
+.toc-group a.mod{
+  display:flex; align-items:center; gap:.6rem; text-decoration:none; color:var(--ink);
+  font-family:var(--font-display); text-transform:uppercase; font-size:.92rem; letter-spacing:.02em;
+}
+.toc-group a.mod .n{font-family:var(--font-mono); color:var(--accent); font-size:.85rem;}
+.toc-group .count{color:var(--muted); font-size:.78rem; font-family:var(--font-body); margin-left:auto;}
+
+/* module sections */
+.module{padding:2.6rem 0; border-bottom:1px solid var(--border);}
+.module-head{display:flex; align-items:center; gap:.9rem; flex-wrap:wrap;}
+.mod-badge{
+  font-family:var(--font-mono); font-size:.78rem; color:var(--accent);
+  border:1px solid var(--accent); border-radius:999px; padding:.15rem .6rem;
+}
+.actor-tags{display:flex; gap:.4rem; flex-wrap:wrap; margin-top:.9rem;}
+.actor-tag{
+  font-size:.72rem; background:var(--court-soft); color:var(--court); border-radius:999px;
+  padding:.2rem .6rem; font-weight:600;
+}
+
+table.uc{
+  width:100%; border-collapse:collapse; margin-top:1.4rem; font-size:.89rem;
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden;
+}
+.table-scroll{overflow-x:auto; border-radius:var(--radius);}
+table.uc th{
+  text-align:left; font-family:var(--font-display); text-transform:uppercase; font-size:.72rem;
+  letter-spacing:.06em; color:var(--muted); background:var(--surface-2); padding:.6rem .8rem; border-bottom:1px solid var(--border);
+}
+table.uc td{padding:.65rem .8rem; border-bottom:1px solid var(--border); vertical-align:top; color:var(--ink-soft);}
+table.uc tr:last-child td{border-bottom:none;}
+table.uc td.id{font-family:var(--font-mono); color:var(--accent); white-space:nowrap; font-size:.82rem;}
+table.uc td.name{color:var(--ink); font-weight:600;}
+table.uc td.actor{white-space:nowrap; font-size:.78rem; color:var(--court);}
+
+/* detailed use case cards */
+.uc-detail{
+  margin-top:1.4rem; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface);
+  overflow:hidden;
+}
+.uc-detail summary{
+  cursor:pointer; list-style:none; padding:.9rem 1.1rem; display:flex; align-items:center; gap:.8rem;
+  font-weight:700; background:var(--surface-2);
+}
+.uc-detail summary::-webkit-details-marker{display:none;}
+.uc-detail summary::after{content:"+"; margin-left:auto; font-family:var(--font-mono); color:var(--accent); font-size:1.1rem;}
+.uc-detail[open] summary::after{content:"–";}
+.uc-detail summary .id{font-family:var(--font-mono); color:var(--accent); font-size:.8rem; font-weight:500;}
+.uc-detail .body{padding:1.1rem 1.1rem 1.3rem;}
+.uc-detail .grid2{display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:1rem;}
+.uc-detail h4{font-family:var(--font-body); text-transform:none; letter-spacing:0; font-size:.8rem; color:var(--muted); font-weight:700; margin-bottom:.35rem;}
+.uc-detail ol, .uc-detail ul{margin:0; padding-left:1.15rem; color:var(--ink-soft); font-size:.9rem;}
+.uc-detail li{margin-bottom:.3rem;}
+.flag{
+  display:inline-block; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+  padding:.15rem .5rem; border-radius:5px; margin-left:.5rem;
+}
+.flag.critical{background:var(--danger-soft); color:var(--danger);}
+.flag.core{background:var(--accent-soft); color:var(--accent);}
+
+/* callouts */
+.callout{
+  border-left:3px solid var(--court); background:var(--court-soft); border-radius:0 var(--radius) var(--radius) 0;
+  padding:1rem 1.2rem; margin-top:1.4rem;
+}
+.callout.warn{border-color:var(--warn); background:var(--warn-soft);}
+.callout h4{font-family:var(--font-display); text-transform:uppercase; font-size:.85rem; letter-spacing:.04em; margin-bottom:.4rem;}
+.callout p:last-child{margin-bottom:0;}
+
+/* nfr table */
+table.nfr{width:100%; border-collapse:collapse; margin-top:1rem; font-size:.9rem;}
+table.nfr th{text-align:left; font-family:var(--font-display); text-transform:uppercase; font-size:.72rem; letter-spacing:.06em; color:var(--muted); padding:.5rem .7rem; border-bottom:1px solid var(--border);}
+table.nfr td{padding:.6rem .7rem; border-bottom:1px solid var(--border); color:var(--ink-soft);}
+table.nfr td.k{color:var(--ink); font-weight:600; white-space:nowrap;}
+
+.arch-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin-top:1.4rem;}
+.arch-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1rem 1.1rem;}
+.arch-card .k{font-family:var(--font-mono); font-size:.72rem; color:var(--accent); text-transform:uppercase; letter-spacing:.04em;}
+.arch-card p{font-size:.86rem; margin:.4rem 0 0; color:var(--ink-soft);}
+
+footer{padding:2.4rem 0 3.5rem; color:var(--muted); font-size:.85rem;}
+footer a{color:var(--muted);}
+
+@media (max-width:640px){
+  .uc-detail .grid2{grid-template-columns:1fr;}
+  .wrap{padding:0 1.1rem;}
+  header.hero{padding:2.2rem 0 1.8rem;}
+}
+</style>
+
+<div class="topbar">
+  <a href="#toc">↑ Índice</a>
+  <span>HoopAcademy · Especificación funcional</span>
+</div>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">Análisis funcional · v1.0</div>
+  <h1 class="title">Casos de uso — HoopAcademy</h1>
+  <p class="subtitle">Plataforma de formación de básquetbol para jugadores y entrenadores: inscripción a clínicas presenciales, venta de video-cursos protegidos y pagos por transferencia, PayPal y tarjeta — en sitio web y apps iOS/Android.</p>
+  <div class="meta-row">
+    <div><strong>Preparado por:</strong> Mauro Allende</div>
+    <div><strong>Alcance:</strong> Web + iOS + Android</div>
+    <div><strong>Fecha:</strong> Septiembre 2026</div>
+    <div><strong>Estado:</strong> Borrador para validación de negocio</div>
+  </div>
+</header>
+
+<section aria-labelledby="intro-h">
+  <div class="section-head"><span class="section-num">00</span><h2 class="section-title" id="intro-h">Alcance y criterio de lectura</h2></div>
+  <p class="section-intro">
+    Este documento releva los casos de uso funcionales de HoopAcademy: un sitio web con aplicación mobile complementaria donde jugadores y entrenadores se registran, se inscriben a cursos presenciales de básquetbol y compran cursos en video y material de capacitación. El punto más sensible del proyecto —explícitamente señalado por el negocio— es la protección del contenido audiovisual: los videos deben poder verse dentro de la plataforma sin quedar disponibles para descarga o copia. Por eso, además del catálogo estándar de casos de uso, el documento incluye fichas detalladas para los flujos de mayor riesgo (reproducción protegida, compra digital dentro de la app, pagos por transferencia) y una sección de consideraciones técnicas y legales que condicionan el diseño de esos flujos, en particular las reglas de compra dentro de la app de Apple y Google.
+  </p>
+  <p class="section-intro">
+    Los casos de uso están agrupados en 11 módulos funcionales y numerados con un código estable (ej. <code>UC-DRM-02</code>) para poder referenciarlos en historias de usuario, tickets y pruebas de aceptación.
+  </p>
+</section>
+
+<section aria-labelledby="actors-h">
+  <div class="section-head"><span class="section-num">01</span><h2 class="section-title" id="actors-h">Actores del sistema</h2></div>
+  <p class="section-intro">Personas, roles internos y sistemas externos que interactúan con la plataforma.</p>
+  <div class="actor-grid">
+    <div class="actor-card"><div class="kind">Usuario final</div><h3>Jugador</h3><p>Se registra, compra cursos en video y/o se inscribe a clínicas presenciales. Consume contenido desde web y mobile.</p></div>
+    <div class="actor-card"><div class="kind">Usuario final</div><h3>Entrenador / Coach</h3><p>Igual que el jugador, con catálogo orientado a metodología y planificación. Puede requerir facturación a nombre de un club.</p></div>
+    <div class="actor-card"><div class="kind">Rol de negocio</div><h3>Instructor / Profesor</h3><p>Dicta clínicas presenciales y/o produce contenido en video. Ve sus propias inscripciones y métricas de venta.</p></div>
+    <div class="actor-card"><div class="kind">Rol interno</div><h3>Administrador de plataforma</h3><p>Gestiona catálogo, sedes, usuarios, contenido y configuración general del sitio y la app.</p></div>
+    <div class="actor-card"><div class="kind">Rol interno</div><h3>Administrador de pagos / finanzas</h3><p>Concilia cobros, valida transferencias bancarias, emite reembolsos y reportes de facturación.</p></div>
+    <div class="actor-card"><div class="kind">Rol interno</div><h3>Soporte al cliente</h3><p>Atiende consultas, reclamos de acceso a contenido y gestiones de reembolso o cambio de curso.</p></div>
+    <div class="actor-card"><div class="kind">Sistema externo</div><h3>Pasarela de tarjetas</h3><p>Procesador de crédito/débito (ej. Stripe, MercadoPago, Getnet) que autoriza y liquida pagos con tarjeta.</p></div>
+    <div class="actor-card"><div class="kind">Sistema externo</div><h3>PayPal</h3><p>Procesa pagos y notifica confirmación vía webhook/IPN.</p></div>
+    <div class="actor-card"><div class="kind">Sistema externo</div><h3>Banco emisor / receptor</h3><p>Interviene en el pago por transferencia bancaria; no hay integración directa, solo conciliación manual o por archivo.</p></div>
+    <div class="actor-card"><div class="kind">Sistema externo</div><h3>App Store / Google Play</h3><p>Actor obligatorio cuando la compra de contenido digital ocurre dentro de la app mobile (ver §12).</p></div>
+    <div class="actor-card"><div class="kind">Sistema interno</div><h3>Motor de streaming / DRM</h3><p>Empaqueta, protege, emite licencias y sirve el video mediante URLs firmadas de corta duración.</p></div>
+    <div class="actor-card"><div class="kind">Sistema interno</div><h3>Motor de notificaciones</h3><p>Envía email, push y mensajes in-app disparados por eventos de negocio.</p></div>
+  </div>
+</section>
+
+<section id="toc" aria-labelledby="toc-h">
+  <div class="section-head"><span class="section-num">02</span><h2 class="section-title" id="toc-h">Índice de módulos</h2></div>
+  <div class="toc-grid">
+    <div class="toc-group"><a class="mod" href="#m1"><span class="n">01</span> Cuenta y autenticación <span class="count">10 UC</span></a></div>
+    <div class="toc-group"><a class="mod" href="#m2"><span class="n">02</span> Catálogo y descubrimiento <span class="count">7 UC</span></a></div>
+    <div class="toc-group"><a class="mod" href="#m3"><span class="n">03</span> Cursos presenciales <span class="count">8 UC</span></a></div>
+    <div class="toc-group"><a class="mod" href="#m4"><span class="n">04</span> Contenido digital — compra <span class="count">8 UC</span></a></div>
+    <div class="toc-group"><a class="mod" href="#m5"><span class="n">05</span> Pagos y facturación <span class="count">9 UC</span></a></div>
+    <div class="toc-group"><a class="mod" href="#m6"><span class="n">06</span> Reproducción segura / DRM <span class="count">9 UC</span></a></div>
+    <div class="toc-group"><a class="mod" href="#m7"><span class="n">07</span> Mi cuenta <span class="count">6 UC</span></a></div>
+    <div class="toc-group"><a class="mod" href="#m8"><span class="n">08</span> Backoffice / administración <span class="count">10 UC</span></a></div>
+    <div class="toc-group"><a class="mod" href="#m9"><span class="n">09</span> Notificaciones <span class="count">4 UC</span></a></div>
+    <div class="toc-group"><a class="mod" href="#m10"><span class="n">10</span> App mobile (iOS/Android) <span class="count">8 UC</span></a></div>
+    <div class="toc-group"><a class="mod" href="#m11"><span class="n">11</span> Soporte y legal <span class="count">5 UC</span></a></div>
+  </div>
+</section>
+
+<!-- MODULE 1 -->
+<section class="module" id="m1" aria-labelledby="m1-h">
+  <div class="module-head"><span class="mod-badge">Módulo 01</span><h2 class="section-title" id="m1-h">Cuenta y autenticación</h2></div>
+  <p class="section-intro">Alta, identificación y gestión del perfil. Define el tipo de usuario (jugador / entrenador) usado luego para recomendar catálogo, y sienta la base del control de dispositivos que exige la protección de contenido.</p>
+  <div class="table-scroll">
+  <table class="uc">
+    <thead><tr><th>Código</th><th>Caso de uso</th><th>Actor(es)</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td class="id">UC-AUT-01</td><td class="name">Registrarse</td><td class="actor">Visitante</td><td>Crea cuenta con email/contraseña o login social (Google/Apple), elige perfil jugador o entrenador y acepta términos y política de privacidad.</td></tr>
+      <tr><td class="id">UC-AUT-02</td><td class="name">Verificar email</td><td class="actor">Visitante</td><td>Confirma la cuenta mediante enlace o código enviado por email antes de habilitar compras.</td></tr>
+      <tr><td class="id">UC-AUT-03</td><td class="name">Iniciar sesión</td><td class="actor">Jugador, Entrenador</td><td>Autenticación por email/contraseña o proveedor social; emite token de sesión con expiración.</td></tr>
+      <tr><td class="id">UC-AUT-04</td><td class="name">Recuperar contraseña</td><td class="actor">Jugador, Entrenador</td><td>Solicita restablecimiento vía email con enlace de un solo uso y vencimiento corto.</td></tr>
+      <tr><td class="id">UC-AUT-05</td><td class="name">Editar perfil</td><td class="actor">Jugador, Entrenador</td><td>Actualiza datos personales, categoría/posición o certificaciones, club/institución y foto.</td></tr>
+      <tr><td class="id">UC-AUT-06</td><td class="name">Cerrar sesión</td><td class="actor">Jugador, Entrenador</td><td>Invalida el token activo en el dispositivo actual.</td></tr>
+      <tr><td class="id">UC-AUT-07</td><td class="name">Gestionar dispositivos vinculados</td><td class="actor">Jugador, Entrenador</td><td>Ve los dispositivos/sesiones con acceso a su contenido comprado y puede revocar acceso remoto — soporta el límite de reproducción simultánea del módulo DRM.</td></tr>
+      <tr><td class="id">UC-AUT-08</td><td class="name">Activar verificación en dos pasos</td><td class="actor">Jugador, Entrenador</td><td>Habilita un segundo factor (SMS/app autenticadora) de forma opcional para reforzar cuentas con historial de compra.</td></tr>
+      <tr><td class="id">UC-AUT-09</td><td class="name">Solicitar baja de cuenta</td><td class="actor">Jugador, Entrenador</td><td>Pide eliminación o anonimización de datos personales conforme a normativa vigente, conservando comprobantes fiscales obligatorios.</td></tr>
+      <tr><td class="id">UC-AUT-10</td><td class="name">Asumir rol de instructor</td><td class="actor">Administrador</td><td>El administrador promueve una cuenta a rol instructor, habilitando permisos de carga de contenido y visualización de sus propias métricas.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- MODULE 2 -->
+<section class="module" id="m2" aria-labelledby="m2-h">
+  <div class="module-head"><span class="mod-badge">Módulo 02</span><h2 class="section-title" id="m2-h">Catálogo y descubrimiento</h2></div>
+  <p class="section-intro">Exploración conjunta de clínicas presenciales y video-cursos, con filtros orientados a las dos audiencias del negocio.</p>
+  <div class="table-scroll">
+  <table class="uc">
+    <thead><tr><th>Código</th><th>Caso de uso</th><th>Actor(es)</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td class="id">UC-CAT-01</td><td class="name">Explorar catálogo</td><td class="actor">Visitante, Jugador, Entrenador</td><td>Navega cursos presenciales y video-cursos en una grilla unificada, con vista previa de precio y modalidad.</td></tr>
+      <tr><td class="id">UC-CAT-02</td><td class="name">Filtrar y buscar</td><td class="actor">Visitante, Jugador, Entrenador</td><td>Filtra por audiencia (jugador/entrenador), nivel, categoría de edad, modalidad, sede, precio y fecha; busca por texto libre.</td></tr>
+      <tr><td class="id">UC-CAT-03</td><td class="name">Ver ficha de curso presencial</td><td class="actor">Visitante, Jugador, Entrenador</td><td>Muestra temario, instructor, sede, cupos disponibles, fechas y política de cancelación.</td></tr>
+      <tr><td class="id">UC-CAT-04</td><td class="name">Ver ficha de video-curso</td><td class="actor">Visitante, Jugador, Entrenador</td><td>Muestra temario, duración, instructor, tráiler no protegido de 30-60s y contenido incluido (videos, PDFs, planillas).</td></tr>
+      <tr><td class="id">UC-CAT-05</td><td class="name">Ver reseñas y calificación</td><td class="actor">Visitante, Jugador, Entrenador</td><td>Consulta valoraciones de alumnos previos por curso; solo puede calificar quien completó una compra o inscripción.</td></tr>
+      <tr><td class="id">UC-CAT-06</td><td class="name">Guardar en favoritos</td><td class="actor">Jugador, Entrenador</td><td>Marca cursos de interés para acceso rápido posterior, sincronizado entre web y mobile.</td></tr>
+      <tr><td class="id">UC-CAT-07</td><td class="name">Recibir recomendaciones</td><td class="actor">Jugador, Entrenador</td><td>El sistema sugiere cursos según perfil (jugador/entrenador, nivel) e historial de compra.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- MODULE 3 -->
+<section class="module" id="m3" aria-labelledby="m3-h">
+  <div class="module-head"><span class="mod-badge">Módulo 03</span><h2 class="section-title" id="m3-h">Cursos presenciales — inscripción</h2></div>
+  <p class="section-intro">Reserva de cupo, asistencia y certificación de clínicas físicas. Es un servicio real-world: fuera del alcance de las reglas de compra dentro de la app (ver §12).</p>
+  <div class="table-scroll">
+  <table class="uc">
+    <thead><tr><th>Código</th><th>Caso de uso</th><th>Actor(es)</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td class="id">UC-PRE-01</td><td class="name">Inscribirse a curso presencial</td><td class="actor">Jugador, Entrenador</td><td>Selecciona sede y turno, revisa cupo disponible y confirma la reserva, que queda "pendiente de pago" hasta acreditarse.</td></tr>
+      <tr><td class="id">UC-PRE-02</td><td class="name">Verificar cupo en tiempo real</td><td class="actor">Sistema</td><td>Bloquea temporalmente el cupo elegido durante el checkout para evitar sobreventa; libera si el pago no se completa en el tiempo límite.</td></tr>
+      <tr><td class="id">UC-PRE-03</td><td class="name">Unirse a lista de espera</td><td class="actor">Jugador, Entrenador</td><td>Se anota cuando no hay cupo; recibe notificación automática si se libera un lugar.</td></tr>
+      <tr><td class="id">UC-PRE-04</td><td class="name">Cancelar inscripción</td><td class="actor">Jugador, Entrenador</td><td>Cancela dentro del plazo permitido por la política del curso, disparando el flujo de reembolso según corresponda.</td></tr>
+      <tr><td class="id">UC-PRE-05</td><td class="name">Reprogramar inscripción</td><td class="actor">Jugador, Entrenador</td><td>Cambia de fecha/sede dentro de un mismo curso sujeto a disponibilidad, sin generar un nuevo pago si no hay diferencia de precio.</td></tr>
+      <tr><td class="id">UC-PRE-06</td><td class="name">Registrar asistencia (check-in)</td><td class="actor">Instructor, Jugador</td><td>El asistente presenta un código QR generado en su cuenta; el instructor lo escanea desde la app para marcar presente.</td></tr>
+      <tr><td class="id">UC-PRE-07</td><td class="name">Emitir certificado de finalización</td><td class="actor">Sistema, Instructor</td><td>Genera un certificado en PDF una vez confirmada la asistencia mínima requerida y lo deja disponible en "Mi cuenta".</td></tr>
+      <tr><td class="id">UC-PRE-08</td><td class="name">Recibir recordatorios del curso</td><td class="actor">Sistema</td><td>Envía confirmación al inscribirse y recordatorios automáticos 72h y 24h antes del inicio, con dirección y qué llevar.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- MODULE 4 -->
+<section class="module" id="m4" aria-labelledby="m4-h">
+  <div class="module-head"><span class="mod-badge">Módulo 04</span><h2 class="section-title" id="m4-h">Contenido digital — compra</h2></div>
+  <p class="section-intro">Adquisición de video-cursos y material descargable. En mobile, este flujo queda sujeto a las políticas de compra dentro de la app (ver ficha UC-DIG-08 y §12).</p>
+  <div class="table-scroll">
+  <table class="uc">
+    <thead><tr><th>Código</th><th>Caso de uso</th><th>Actor(es)</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td class="id">UC-DIG-01</td><td class="name">Agregar al carrito</td><td class="actor">Jugador, Entrenador</td><td>Suma uno o más video-cursos o bundles antes de pagar; el carrito persiste entre sesión web y mobile.</td></tr>
+      <tr><td class="id">UC-DIG-02</td><td class="name">Comprar video-curso individual</td><td class="actor">Jugador, Entrenador</td><td>Adquiere acceso permanente (o por N meses, según política) a un curso en video con sus materiales asociados.</td></tr>
+      <tr><td class="id">UC-DIG-03</td><td class="name">Comprar bundle de cursos</td><td class="actor">Jugador, Entrenador</td><td>Compra un paquete con descuento que agrupa varios video-cursos por temática o nivel.</td></tr>
+      <tr><td class="id">UC-DIG-04</td><td class="name">Aplicar cupón de descuento</td><td class="actor">Jugador, Entrenador</td><td>Ingresa un código promocional validado por vigencia, stock y condiciones antes del pago.</td></tr>
+      <tr><td class="id">UC-DIG-05</td><td class="name">Suscribirse a la biblioteca completa</td><td class="actor">Jugador, Entrenador</td><td>Contrata un plan recurrente (mensual/anual) con acceso a todo el catálogo de video mientras la suscripción esté activa.</td></tr>
+      <tr><td class="id">UC-DIG-06</td><td class="name">Cancelar suscripción</td><td class="actor">Jugador, Entrenador</td><td>Da de baja el plan recurrente; conserva acceso hasta el fin del período ya pagado.</td></tr>
+      <tr><td class="id">UC-DIG-07</td><td class="name">Descargar material complementario</td><td class="actor">Jugador, Entrenador</td><td>Descarga PDFs, planillas o ejercicios (no video) con marca de agua identificando al comprador.</td></tr>
+      <tr><td class="id">UC-DIG-08</td><td class="name">Comprar contenido digital desde la app mobile</td><td class="actor">Jugador, Entrenador, App Store/Google Play</td><td>Ver ficha detallada — el pago dentro de la app debe canalizarse por In-App Purchase.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <details class="uc-detail">
+    <summary><span class="id">UC-DIG-08</span> Comprar contenido digital desde la app mobile <span class="flag critical">Crítico</span></summary>
+    <div class="body">
+      <div class="grid2">
+        <div>
+          <h4>Actor principal</h4>
+          <p style="margin:0">Jugador o Entrenador, dentro de la app iOS/Android.</p>
+        </div>
+        <div>
+          <h4>Precondición</h4>
+          <p style="margin:0">Usuario autenticado; producto digital marcado como "consumido dentro de la app".</p>
+        </div>
+      </div>
+      <h4>Flujo principal</h4>
+      <ol>
+        <li>El usuario elige un video-curso o bundle y toca "Comprar".</li>
+        <li>La app detecta que el contenido es digital y lo consume dentro de la propia app, y redirige el pago al flujo nativo de In-App Purchase (StoreKit en iOS / Play Billing en Android) en lugar de la pasarela propia.</li>
+        <li>El usuario confirma el pago con el método ya guardado en su cuenta de Apple/Google.</li>
+        <li>La tienda notifica la compra al backend vía servidor a servidor (App Store Server Notifications / Real-time Developer Notifications).</li>
+        <li>El backend valida el recibo, acredita el acceso al contenido y lo refleja también en la cuenta web del usuario.</li>
+      </ol>
+      <h4 style="margin-top:1rem">Flujo alternativo</h4>
+      <ul>
+        <li><strong>A1 — Compra ya realizada en web:</strong> si el usuario ya compró el mismo curso desde el sitio, la app debe reconocerlo y ofrecer solo "Ver curso", nunca cobrarlo dos veces.</li>
+        <li><strong>A2 — Pago rechazado por la tienda:</strong> se muestra el motivo devuelto por StoreKit/Play Billing y se ofrece reintentar.</li>
+      </ul>
+      <h4 style="margin-top:1rem">Postcondición</h4>
+      <p style="margin:0">El curso queda disponible en la biblioteca del usuario en todas las plataformas; la comisión de la tienda (variable según categoría y programa del desarrollador) se descuenta del ingreso neto reconocido en el backoffice.</p>
+    </div>
+  </details>
+
+  <div class="callout warn">
+    <h4>Nota de diseño</h4>
+    <p>Los cursos <em>presenciales</em> no están sujetos a esta regla porque son un servicio prestado fuera de la app: pueden cobrarse con la pasarela propia también desde mobile. El contenido <em>digital</em> consumido dentro de la app, en cambio, debe ofrecerse mediante el sistema de compras de la tienda cuando el usuario compra desde el dispositivo. Ver §12 para el detalle y las excepciones regionales a validar con legal antes del desarrollo.</p>
+  </div>
+</section>
+
+<!-- MODULE 5 -->
+<section class="module" id="m5" aria-labelledby="m5-h">
+  <div class="module-head"><span class="mod-badge">Módulo 05</span><h2 class="section-title" id="m5-h">Pagos y facturación</h2></div>
+  <p class="section-intro">Cubre los métodos de pago solicitados por el negocio para compras web: transferencia bancaria, PayPal y tarjeta de crédito/débito, más conciliación y reembolsos.</p>
+  <div class="table-scroll">
+  <table class="uc">
+    <thead><tr><th>Código</th><th>Caso de uso</th><th>Actor(es)</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td class="id">UC-PAG-01</td><td class="name">Seleccionar método de pago</td><td class="actor">Jugador, Entrenador</td><td>Elige entre tarjeta, PayPal o transferencia bancaria en el checkout; la opción de tienda mobile reemplaza esto en la app cuando aplica.</td></tr>
+      <tr><td class="id">UC-PAG-02</td><td class="name">Pagar con tarjeta de crédito/débito</td><td class="actor">Jugador, Entrenador, Pasarela de tarjetas</td><td>Tokeniza los datos de la tarjeta con la pasarela (no se almacenan en el propio servidor) y autoriza el cobro; soporta cuotas donde el mercado lo permita.</td></tr>
+      <tr><td class="id">UC-PAG-03</td><td class="name">Pagar con PayPal</td><td class="actor">Jugador, Entrenador, PayPal</td><td>Redirige o abre el flujo de PayPal, y confirma el pago por webhook (IPN) antes de acreditar el acceso.</td></tr>
+      <tr><td class="id">UC-PAG-04</td><td class="name">Pagar por transferencia bancaria</td><td class="actor">Jugador, Entrenador</td><td>Ver ficha detallada — a diferencia de tarjeta/PayPal, la acreditación no es automática.</td></tr>
+      <tr><td class="id">UC-PAG-05</td><td class="name">Validar comprobante de transferencia</td><td class="actor">Administrador de pagos</td><td>Revisa el comprobante subido contra el estado de cuenta bancario y aprueba o rechaza la orden manualmente.</td></tr>
+      <tr><td class="id">UC-PAG-06</td><td class="name">Emitir factura o comprobante</td><td class="actor">Sistema</td><td>Genera el comprobante fiscal correspondiente (factura A/B/C o equivalente local) al confirmarse cada pago.</td></tr>
+      <tr><td class="id">UC-PAG-07</td><td class="name">Procesar reembolso</td><td class="actor">Administrador de pagos</td><td>Revierte un cobro total o parcial según la política del curso o contenido, y revoca el acceso si corresponde.</td></tr>
+      <tr><td class="id">UC-PAG-08</td><td class="name">Recibir confirmación de pago (webhook)</td><td class="actor">Sistema, Pasarela, PayPal</td><td>Escucha las notificaciones asíncronas de los proveedores de pago y actualiza el estado de la orden de forma idempotente.</td></tr>
+      <tr><td class="id">UC-PAG-09</td><td class="name">Ver estado de una orden</td><td class="actor">Jugador, Entrenador</td><td>Consulta si un pago está pendiente, aprobado, rechazado o en revisión manual (caso transferencia).</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <details class="uc-detail">
+    <summary><span class="id">UC-PAG-04</span> Pagar por transferencia bancaria <span class="flag core">Núcleo del negocio</span></summary>
+    <div class="body">
+      <div class="grid2">
+        <div>
+          <h4>Actor principal</h4>
+          <p style="margin:0">Jugador o Entrenador.</p>
+        </div>
+        <div>
+          <h4>Precondición</h4>
+          <p style="margin:0">Orden generada con datos bancarios de destino visibles en el checkout.</p>
+        </div>
+      </div>
+      <h4>Flujo principal</h4>
+      <ol>
+        <li>El sistema muestra los datos de la cuenta bancaria y un número de orden a usar como referencia.</li>
+        <li>El usuario realiza la transferencia fuera de la plataforma y sube el comprobante (imagen o PDF) junto con la fecha y el monto declarado.</li>
+        <li>La orden queda en estado "pendiente de verificación"; para una inscripción presencial, el cupo se retiene por un plazo límite configurable.</li>
+        <li>El administrador de pagos concilia el comprobante contra el movimiento bancario real y aprueba la orden.</li>
+        <li>El sistema acredita el acceso (curso digital) o confirma el cupo (curso presencial) y notifica al usuario.</li>
+      </ol>
+      <h4 style="margin-top:1rem">Flujo alternativo</h4>
+      <ul>
+        <li><strong>A1 — Comprobante no coincide:</strong> el administrador rechaza la orden con un motivo; se notifica al usuario para que corrija o suba un nuevo comprobante.</li>
+        <li><strong>A2 — Vencimiento del plazo:</strong> si no se sube comprobante dentro del plazo, la orden se cancela automáticamente y libera el cupo o el cupón aplicado.</li>
+      </ul>
+      <h4 style="margin-top:1rem">Postcondición</h4>
+      <p style="margin:0">Acceso o cupo confirmado solo tras aprobación manual explícita; nunca se acredita contenido de forma automática por este medio.</p>
+    </div>
+  </details>
+</section>
+
+<!-- MODULE 6 -->
+<section class="module" id="m6" aria-labelledby="m6-h">
+  <div class="module-head"><span class="mod-badge">Módulo 06</span><h2 class="section-title" id="m6-h">Reproducción segura de contenido / DRM</h2></div>
+  <p class="section-intro">El módulo que resuelve el requisito central del negocio: que el video se pueda ver dentro de la plataforma sin poder descargarse ni copiarse. Ver §13 para las limitaciones reales de esta protección.</p>
+  <div class="table-scroll">
+  <table class="uc">
+    <thead><tr><th>Código</th><th>Caso de uso</th><th>Actor(es)</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td class="id">UC-DRM-01</td><td class="name">Reproducir video en streaming protegido</td><td class="actor">Jugador, Entrenador</td><td>Ver ficha detallada — reproducción exclusivamente dentro del player propio, sin URL de archivo descargable.</td></tr>
+      <tr><td class="id">UC-DRM-02</td><td class="name">Emitir licencia DRM</td><td class="actor">Sistema</td><td>Entrega una licencia Widevine (Android/Chrome), FairPlay (iOS/Safari) o PlayReady según el reproductor, atada al usuario y con expiración corta.</td></tr>
+      <tr><td class="id">UC-DRM-03</td><td class="name">Aplicar marca de agua dinámica</td><td class="actor">Sistema</td><td>Superpone en el video, en reproducción, el email o ID del usuario y la fecha/hora, disuadiendo la grabación de pantalla.</td></tr>
+      <tr><td class="id">UC-DRM-04</td><td class="name">Limitar dispositivos y sesiones simultáneas</td><td class="actor">Sistema</td><td>Restringe la reproducción a un número máximo de dispositivos activos y de streams concurrentes por cuenta.</td></tr>
+      <tr><td class="id">UC-DRM-05</td><td class="name">Revocar acceso a contenido</td><td class="actor">Administrador, Sistema</td><td>Invalida licencias y tokens activos de un usuario ante fraude, contracargo o vencimiento de suscripción.</td></tr>
+      <tr><td class="id">UC-DRM-06</td><td class="name">Servir streaming adaptativo</td><td class="actor">Sistema</td><td>Ajusta la calidad del video (HLS/DASH, múltiples bitrates) según el ancho de banda disponible del usuario.</td></tr>
+      <tr><td class="id">UC-DRM-07</td><td class="name">Guardar progreso de reproducción</td><td class="actor">Jugador, Entrenador</td><td>Registra el punto exacto donde el usuario dejó cada video para retomarlo en cualquier dispositivo.</td></tr>
+      <tr><td class="id">UC-DRM-08</td><td class="name">Descargar video para ver offline (mobile)</td><td class="actor">Jugador, Entrenador</td><td>Ver ficha detallada en §10 (UC-MOB-02) — descarga cifrada con licencia offline, no un archivo reproducible fuera de la app.</td></tr>
+      <tr><td class="id">UC-DRM-09</td><td class="name">Detectar y registrar reproducción anómala</td><td class="actor">Sistema, Administrador</td><td>Alerta patrones sospechosos (misma cuenta desde ubicaciones o dispositivos incompatibles en poco tiempo) para revisión manual.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <details class="uc-detail">
+    <summary><span class="id">UC-DRM-01</span> Reproducir video en streaming protegido <span class="flag critical">Crítico</span></summary>
+    <div class="body">
+      <div class="grid2">
+        <div>
+          <h4>Actor principal</h4>
+          <p style="margin:0">Jugador o Entrenador con acceso vigente al contenido.</p>
+        </div>
+        <div>
+          <h4>Precondición</h4>
+          <p style="margin:0">Compra o suscripción activa; sesión autenticada; dispositivo dentro del límite permitido.</p>
+        </div>
+      </div>
+      <h4>Flujo principal</h4>
+      <ol>
+        <li>El usuario abre un video desde su biblioteca en web o mobile.</li>
+        <li>El cliente solicita al backend un token de reproducción de vida corta para ese video y ese usuario.</li>
+        <li>El backend valida el derecho de acceso y devuelve una URL de manifiesto (HLS/DASH) firmada, sin exponer nunca la URL directa del archivo origen.</li>
+        <li>El reproductor solicita la licencia DRM correspondiente a la plataforma (Widevine/FairPlay/PlayReady) y comienza la reproducción segmentada.</li>
+        <li>El video se muestra dentro del player embebido, con marca de agua dinámica y controles nativos de descarga deshabilitados.</li>
+      </ol>
+      <h4 style="margin-top:1rem">Flujo alternativo</h4>
+      <ul>
+        <li><strong>A1 — Límite de dispositivos alcanzado:</strong> se informa al usuario y se lo dirige a revocar una sesión existente antes de continuar.</li>
+        <li><strong>A2 — Token expirado o reproducción prolongada:</strong> el player renueva el token en segundo plano de forma transparente.</li>
+        <li><strong>A3 — Grabación de pantalla detectada (iOS):</strong> el player pausa o difumina el video mientras la captura esté activa.</li>
+      </ul>
+      <h4 style="margin-top:1rem">Postcondición</h4>
+      <p style="margin:0">El contenido se reprodujo sin exponer un archivo descargable; queda registro de la sesión de reproducción para auditoría.</p>
+    </div>
+  </details>
+</section>
+
+<!-- MODULE 7 -->
+<section class="module" id="m7" aria-labelledby="m7-h">
+  <div class="module-head"><span class="mod-badge">Módulo 07</span><h2 class="section-title" id="m7-h">Mi cuenta</h2></div>
+  <p class="section-intro">Panel personal donde el usuario administra lo que compró, lo que cursó y sus datos de facturación.</p>
+  <div class="table-scroll">
+  <table class="uc">
+    <thead><tr><th>Código</th><th>Caso de uso</th><th>Actor(es)</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td class="id">UC-CTA-01</td><td class="name">Ver mis cursos presenciales</td><td class="actor">Jugador, Entrenador</td><td>Lista inscripciones próximas y pasadas, con estado de pago y asistencia.</td></tr>
+      <tr><td class="id">UC-CTA-02</td><td class="name">Ver mi biblioteca de video-cursos</td><td class="actor">Jugador, Entrenador</td><td>Accede a todo el contenido digital comprado o incluido en su suscripción activa.</td></tr>
+      <tr><td class="id">UC-CTA-03</td><td class="name">Continuar viendo</td><td class="actor">Jugador, Entrenador</td><td>Retoma cada video desde el último punto reproducido, con indicador visual de progreso por curso.</td></tr>
+      <tr><td class="id">UC-CTA-04</td><td class="name">Descargar certificados</td><td class="actor">Jugador, Entrenador</td><td>Accede y descarga en PDF los certificados de los cursos presenciales completados.</td></tr>
+      <tr><td class="id">UC-CTA-05</td><td class="name">Ver historial de facturación</td><td class="actor">Jugador, Entrenador</td><td>Consulta y descarga comprobantes de todas las compras, con filtro por fecha y estado.</td></tr>
+      <tr><td class="id">UC-CTA-06</td><td class="name">Gestionar datos de facturación</td><td class="actor">Jugador, Entrenador</td><td>Edita razón social/CUIT o datos fiscales para que las facturas se emitan a nombre de un club o institución.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- MODULE 8 -->
+<section class="module" id="m8" aria-labelledby="m8-h">
+  <div class="module-head"><span class="mod-badge">Módulo 08</span><h2 class="section-title" id="m8-h">Backoffice / administración</h2></div>
+  <p class="section-intro">Herramientas internas para operar el catálogo, el contenido protegido, los cupos presenciales y la conciliación de pagos.</p>
+  <div class="table-scroll">
+  <table class="uc">
+    <thead><tr><th>Código</th><th>Caso de uso</th><th>Actor(es)</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td class="id">UC-ADM-01</td><td class="name">Gestionar cursos presenciales</td><td class="actor">Administrador</td><td>Crea, edita y da de baja clínicas, definiendo sede, cupos, precio y política de cancelación.</td></tr>
+      <tr><td class="id">UC-ADM-02</td><td class="name">Gestionar video-cursos</td><td class="actor">Administrador, Instructor</td><td>Crea la ficha comercial de un curso digital: título, temario, precio, materiales asociados y estado de publicación.</td></tr>
+      <tr><td class="id">UC-ADM-03</td><td class="name">Subir y procesar video</td><td class="actor">Administrador, Instructor</td><td>Carga el archivo maestro; el sistema lo transcodifica a múltiples bitratos y lo empaqueta con protección DRM antes de publicarlo.</td></tr>
+      <tr><td class="id">UC-ADM-04</td><td class="name">Gestionar instructores</td><td class="actor">Administrador</td><td>Da de alta instructores, asocia sus cursos y define su participación en ingresos si corresponde.</td></tr>
+      <tr><td class="id">UC-ADM-05</td><td class="name">Gestionar sedes y cupos</td><td class="actor">Administrador</td><td>Administra ubicaciones físicas, capacidad por turno y calendario de disponibilidad.</td></tr>
+      <tr><td class="id">UC-ADM-06</td><td class="name">Gestionar usuarios y roles</td><td class="actor">Administrador</td><td>Busca, bloquea o edita permisos de cuentas; asigna roles internos (soporte, pagos, instructor).</td></tr>
+      <tr><td class="id">UC-ADM-07</td><td class="name">Ver reportes de ventas e inscripciones</td><td class="actor">Administrador, Administrador de pagos</td><td>Consulta ingresos por método de pago, curso, sede y período, incluyendo comisiones de tienda mobile.</td></tr>
+      <tr><td class="id">UC-ADM-08</td><td class="name">Gestionar cupones y promociones</td><td class="actor">Administrador</td><td>Crea códigos de descuento con vigencia, alcance de producto y límite de usos.</td></tr>
+      <tr><td class="id">UC-ADM-09</td><td class="name">Moderar reseñas</td><td class="actor">Administrador</td><td>Revisa y oculta reseñas que incumplan las normas de la comunidad.</td></tr>
+      <tr><td class="id">UC-ADM-10</td><td class="name">Auditar accesos a contenido protegido</td><td class="actor">Administrador</td><td>Revisa el log de reproducciones, licencias emitidas y alertas de UC-DRM-09 para investigar sospechas de piratería.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- MODULE 9 -->
+<section class="module" id="m9" aria-labelledby="m9-h">
+  <div class="module-head"><span class="mod-badge">Módulo 09</span><h2 class="section-title" id="m9-h">Notificaciones</h2></div>
+  <p class="section-intro">Comunicación transaccional y comercial disparada por eventos del negocio.</p>
+  <div class="table-scroll">
+  <table class="uc">
+    <thead><tr><th>Código</th><th>Caso de uso</th><th>Actor(es)</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td class="id">UC-NOT-01</td><td class="name">Enviar notificaciones transaccionales</td><td class="actor">Sistema</td><td>Confirma registro, pago, inscripción, cupo liberado y vencimiento de suscripción por email y push.</td></tr>
+      <tr><td class="id">UC-NOT-02</td><td class="name">Enviar recordatorios de clínica</td><td class="actor">Sistema</td><td>Avisa con anticipación sobre fecha, sede y horario del curso presencial inscrito.</td></tr>
+      <tr><td class="id">UC-NOT-03</td><td class="name">Notificar nuevo contenido</td><td class="actor">Sistema</td><td>Informa al usuario cuando se publica un curso o material relevante a su perfil o intereses.</td></tr>
+      <tr><td class="id">UC-NOT-04</td><td class="name">Gestionar preferencias de notificación</td><td class="actor">Jugador, Entrenador</td><td>Activa o desactiva canales (email/push) y categorías de aviso desde su perfil.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- MODULE 10 -->
+<section class="module" id="m10" aria-labelledby="m10-h">
+  <div class="module-head"><span class="mod-badge">Módulo 10</span><h2 class="section-title" id="m10-h">Aplicación mobile (iOS / Android)</h2></div>
+  <p class="section-intro">Casos de uso específicos de la app nativa, más allá de los ya cubiertos en los módulos anteriores.</p>
+  <div class="table-scroll">
+  <table class="uc">
+    <thead><tr><th>Código</th><th>Caso de uso</th><th>Actor(es)</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td class="id">UC-MOB-01</td><td class="name">Iniciar sesión con biometría</td><td class="actor">Jugador, Entrenador</td><td>Usa Face ID, Touch ID o huella para reautenticar la sesión sin reingresar contraseña.</td></tr>
+      <tr><td class="id">UC-MOB-02</td><td class="name">Descargar video para ver sin conexión</td><td class="actor">Jugador, Entrenador</td><td>Ver ficha detallada — descarga cifrada con licencia DRM offline de vencimiento corto.</td></tr>
+      <tr><td class="id">UC-MOB-03</td><td class="name">Sincronizar progreso entre dispositivos</td><td class="actor">Sistema</td><td>Refleja en la app el progreso de reproducción y las compras hechas desde el sitio web, y viceversa.</td></tr>
+      <tr><td class="id">UC-MOB-04</td><td class="name">Recibir push notifications</td><td class="actor">Jugador, Entrenador</td><td>Recibe avisos nativos (APNs/FCM) incluso con la app cerrada, respetando las preferencias de UC-NOT-04.</td></tr>
+      <tr><td class="id">UC-MOB-05</td><td class="name">Abrir contenido vía deep link</td><td class="actor">Jugador, Entrenador</td><td>Un enlace en un email o notificación abre directamente el curso o clínica correspondiente dentro de la app.</td></tr>
+      <tr><td class="id">UC-MOB-06</td><td class="name">Escanear código QR de check-in</td><td class="actor">Instructor</td><td>Usa la cámara del dispositivo para registrar asistencia presencial (ver UC-PRE-06).</td></tr>
+      <tr><td class="id">UC-MOB-07</td><td class="name">Restringir capturas de pantalla en video</td><td class="actor">Sistema</td><td>Aplica las banderas y detecciones nativas disponibles por plataforma para dificultar la grabación de pantalla durante la reproducción.</td></tr>
+      <tr><td class="id">UC-MOB-08</td><td class="name">Comprar dentro de la app</td><td class="actor">Jugador, Entrenador, App Store/Google Play</td><td>Ver ficha UC-DIG-08 — mismo flujo, ejecutado desde el cliente nativo.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <details class="uc-detail">
+    <summary><span class="id">UC-MOB-02</span> Descargar video para ver sin conexión <span class="flag critical">Crítico</span></summary>
+    <div class="body">
+      <div class="grid2">
+        <div>
+          <h4>Actor principal</h4>
+          <p style="margin:0">Jugador o Entrenador, desde la app.</p>
+        </div>
+        <div>
+          <h4>Precondición</h4>
+          <p style="margin:0">Acceso vigente al video; conexión a internet disponible en el momento de la descarga.</p>
+        </div>
+      </div>
+      <h4>Flujo principal</h4>
+      <ol>
+        <li>El usuario toca "Descargar" sobre un video de su biblioteca.</li>
+        <li>La app descarga el contenido cifrado junto con una licencia DRM offline de duración limitada (p. ej. 15-30 días, renovable mientras el acceso siga vigente).</li>
+        <li>El video queda disponible en la sección "Descargas" para reproducirse solo dentro de la app, sin conexión.</li>
+        <li>Al reproducirlo offline, se aplican los mismos controles de marca de agua y bloqueo de captura que en streaming.</li>
+        <li>Al expirar la licencia offline, el archivo cifrado deja de ser reproducible hasta que la app se reconecte y la renueve.</li>
+      </ol>
+      <h4 style="margin-top:1rem">Flujo alternativo</h4>
+      <ul>
+        <li><strong>A1 — Se revoca el acceso remotamente:</strong> la próxima vez que la app tenga conexión, invalida la licencia offline aunque el archivo siga en el dispositivo.</li>
+        <li><strong>A2 — Espacio insuficiente:</strong> se informa al usuario antes de iniciar la descarga.</li>
+      </ul>
+      <h4 style="margin-top:1rem">Postcondición</h4>
+      <p style="margin:0">El archivo en disco está cifrado y es inutilizable fuera del reproductor de la app o sin una licencia vigente; no equivale a un video descargable convencional.</p>
+    </div>
+  </details>
+</section>
+
+<!-- MODULE 11 -->
+<section class="module" id="m11" aria-labelledby="m11-h">
+  <div class="module-head"><span class="mod-badge">Módulo 11</span><h2 class="section-title" id="m11-h">Soporte y legal</h2></div>
+  <p class="section-intro">Atención al usuario y cumplimiento normativo transversal a todo el sitio y la app.</p>
+  <div class="table-scroll">
+  <table class="uc">
+    <thead><tr><th>Código</th><th>Caso de uso</th><th>Actor(es)</th><th>Descripción</th></tr></thead>
+    <tbody>
+      <tr><td class="id">UC-SOP-01</td><td class="name">Contactar soporte</td><td class="actor">Jugador, Entrenador</td><td>Abre un ticket o chat por problemas de acceso, pago o reproducción.</td></tr>
+      <tr><td class="id">UC-SOP-02</td><td class="name">Consultar centro de ayuda</td><td class="actor">Visitante, Jugador, Entrenador</td><td>Accede a preguntas frecuentes sobre inscripción, pagos, reembolsos y uso del contenido digital.</td></tr>
+      <tr><td class="id">UC-SOP-03</td><td class="name">Aceptar términos y política de privacidad</td><td class="actor">Visitante, Jugador, Entrenador</td><td>Consentimiento explícito y versionado al registrarse y ante cambios sustanciales de los términos.</td></tr>
+      <tr><td class="id">UC-SOP-04</td><td class="name">Ejercer derechos sobre datos personales</td><td class="actor">Jugador, Entrenador</td><td>Solicita acceso, rectificación o portabilidad de sus datos conforme a la normativa aplicable en su país.</td></tr>
+      <tr><td class="id">UC-SOP-05</td><td class="name">Reportar incidente de piratería</td><td class="actor">Instructor, Administrador</td><td>Informa contenido filtrado fuera de la plataforma para iniciar la revocación de accesos y, si corresponde, acción legal.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- SPECIAL CONSIDERATIONS -->
+<section aria-labelledby="s12-h">
+  <div class="section-head"><span class="section-num">12</span><h2 class="section-title" id="s12-h">Compras dentro de la app: la regla que condiciona todo el diseño mobile</h2></div>
+  <p class="section-intro">
+    Apple y Google exigen, en términos generales, que el contenido digital que se consume dentro de una app se pague a través de su propio sistema de compras (In-App Purchase de Apple / Google Play Billing), reteniendo una comisión sobre esa venta. Los servicios que se prestan fuera de la app —como una clínica presencial de básquetbol— quedan típicamente exceptuados de esta regla, por tratarse de un bien o servicio del mundo físico.
+  </p>
+  <div class="callout warn">
+    <h4>Impacto funcional directo</h4>
+    <p>Esto obliga a diseñar dos caminos de pago distintos según plataforma: en la web, todo se cobra con la pasarela propia (transferencia, PayPal, tarjeta), sin restricciones. En la app mobile, la inscripción a cursos presenciales puede seguir usando esa misma pasarela, pero la compra de video-cursos, bundles o suscripciones debe ofrecerse mediante el sistema de compras del sistema operativo cuando el usuario la inicia desde el dispositivo — no se puede simplemente enlazar o mencionar el pago por transferencia o PayPal para ese tipo de contenido dentro de la app.</p>
+  </div>
+  <p class="section-intro" style="margin-top:1rem">
+    Existen matices y excepciones regionales (por ejemplo, cambios normativos en la Unión Europea y acuerdos puntuales en Estados Unidos que permiten, bajo ciertas condiciones, enlazar a un sistema de pago externo) y las políticas de ambas tiendas se actualizan con frecuencia. Antes de definir el flujo de pago mobile en el diseño técnico, se recomienda validar las guías vigentes de la App Store y Google Play con el equipo legal del proyecto, ya que una implementación que las incumpla puede derivar en el rechazo o la baja de la app.
+  </p>
+</section>
+
+<section aria-labelledby="s13-h">
+  <div class="section-head"><span class="section-num">13</span><h2 class="section-title" id="s13-h">Protección de contenido: qué puede garantizar el diseño y qué no</h2></div>
+  <p class="section-intro">Ningún esquema de protección elimina por completo la piratería — siempre existe la opción de grabar la pantalla con una segunda cámara. El objetivo funcional realista es elevar la dificultad y el costo de copiar el contenido, y dejar rastro de quién lo hizo, no una protección absoluta.</p>
+  <div class="arch-grid">
+    <div class="arch-card"><div class="k">Nunca un archivo servible</div><p>El video nunca se entrega como un archivo descargable directo; se sirve segmentado (HLS/DASH) detrás de URLs firmadas de corta duración.</p></div>
+    <div class="arch-card"><div class="k">DRM por plataforma</div><p>Widevine en Android y Chrome, FairPlay en iOS y Safari, PlayReady en Windows — cada uno cifra el video y exige una licencia ligada al usuario y al dispositivo.</p></div>
+    <div class="arch-card"><div class="k">Marca de agua dinámica</div><p>Superpuesta en el momento de la reproducción con datos identificables del comprador, para disuadir y poder trazar filtraciones.</p></div>
+    <div class="arch-card"><div class="k">Límite de dispositivos y sesiones</div><p>Un número máximo de dispositivos registrados y de reproducciones simultáneas por cuenta, revocable por el usuario o por soporte.</p></div>
+    <div class="arch-card"><div class="k">Bloqueo de captura en mobile</div><p>Uso de las señales nativas disponibles (p. ej. detección de grabación de pantalla en iOS) para pausar u ocultar el video mientras se captura.</p></div>
+    <div class="arch-card"><div class="k">Auditoría y respuesta</div><p>Registro de reproducciones y alertas de patrones anómalos (UC-DRM-09) para revocar accesos e investigar filtraciones con evidencia.</p></div>
+  </div>
+  <p class="section-intro" style="margin-top:1.2rem">Proveedores de referencia que ya resuelven gran parte de este stack (transcodificación, empaquetado DRM multi-formato, marca de agua y entrega por CDN) incluyen soluciones especializadas en video-on-demand protegido, o una combinación de servicios de nube (transcodificación + CDN con firma de URLs) integrada con un proveedor de licencias DRM. La elección concreta es una decisión de arquitectura a evaluar por costo, volumen esperado y soporte de plataforma.</p>
+</section>
+
+<section aria-labelledby="s14-h">
+  <div class="section-head"><span class="section-num">14</span><h2 class="section-title" id="s14-h">Requerimientos no funcionales</h2></div>
+  <table class="nfr">
+    <thead><tr><th>Categoría</th><th>Requerimiento</th></tr></thead>
+    <tbody>
+      <tr><td class="k">Seguridad</td><td>Cifrado en tránsito y reposo, tokenización de pagos (sin almacenar datos de tarjeta propios), URLs de video firmadas y de vida corta, control de acceso por rol en el backoffice.</td></tr>
+      <tr><td class="k">Disponibilidad</td><td>El checkout y la reproducción de video son las rutas críticas: deben priorizarse en el SLA por sobre el resto del sitio.</td></tr>
+      <tr><td class="k">Rendimiento de streaming</td><td>Arranque de reproducción por debajo de 2-3 segundos y adaptación de calidad sin cortes ante variaciones de ancho de banda.</td></tr>
+      <tr><td class="k">Escalabilidad</td><td>La carga de video y la entrega por CDN deben escalar de forma independiente del resto de la aplicación, especialmente ante picos por lanzamiento de un curso.</td></tr>
+      <tr><td class="k">Cumplimiento normativo</td><td>Protección de datos personales según la jurisdicción del usuario, facturación fiscal local y trazabilidad de todas las transacciones de pago.</td></tr>
+      <tr><td class="k">Accesibilidad</td><td>Subtítulos opcionales en video-cursos, contraste y navegación por teclado conformes a WCAG 2.1 AA en el sitio web.</td></tr>
+      <tr><td class="k">Compatibilidad mobile</td><td>Soporte de las últimas dos versiones mayores de iOS y Android, con degradación controlada de DRM en dispositivos no certificados.</td></tr>
+      <tr><td class="k">Observabilidad</td><td>Registro y alertas sobre fallos de pago, errores de licencia DRM y reproducciones anómalas, con panel para el equipo de soporte.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  <p>Documento de análisis funcional preparado como punto de partida para el diseño técnico y de UX de HoopAcademy. Los códigos de caso de uso (<code>UC-XXX-NN</code>) están pensados para trazarse directamente a historias de usuario y casos de prueba en el backlog de implementación.</p>
+</footer>
+
+</div>
